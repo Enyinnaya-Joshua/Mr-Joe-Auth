@@ -1,10 +1,6 @@
 import { Schema, Document, model } from "mongoose";
-
-interface IData {
-  name: string;
-  email: string;
-  password: string;
-}
+import { IData } from "../interfaces/user.interface";
+import isEmail from "validator/lib/isEmail";
 
 interface ISchema extends IData, Document {}
 
@@ -20,14 +16,16 @@ const userSchema = new Schema<IData>(
       trim: true,
       lowercase: true,
       unique: true,
+      validate: [isEmail, "Please enter a valid email"],
     },
     password: {
       type: String,
-      requiredPaths: [true, "Please enter your password"],
+      required: [true, "Please enter your password"],
     },
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
 

@@ -11,7 +11,7 @@ export const register = asyncHandler(
     res: Response,
     next: NextFunction
   ): Promise<Response> => {
-    const { name, email, password } = req.body || {};
+    const { name, email, password } = req.body;
 
     const salt: string = await bcrypt.genSalt(12);
     const hashed: string = await bcrypt.hash(password, salt);
@@ -22,7 +22,6 @@ export const register = asyncHandler(
         new AppError({
           message: "Account not Created",
           httpCode: HttpCode.BAD_REQUEST,
-          isOperational: true,
         })
       );
     }
@@ -39,6 +38,7 @@ export const login = asyncHandler(
     next: NextFunction
   ): Promise<Response> => {
     const { email, password } = req.body;
+
     const user = await UserModel.findOne({ email });
 
     if (!user) {
@@ -46,7 +46,6 @@ export const login = asyncHandler(
         new AppError({
           message: "User not found",
           httpCode: HttpCode.NOT_FOUND,
-          isOperational: true,
         })
       );
     }
@@ -56,7 +55,6 @@ export const login = asyncHandler(
         new AppError({
           message: "Email or password not correct",
           httpCode: HttpCode.UNAUTHORIZED,
-          isOperational: true,
         })
       );
     }
